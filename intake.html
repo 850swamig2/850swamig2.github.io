@@ -10,7 +10,7 @@
 
 <style>
 :root{--bg:#060403;--panel:#120d09;--gold:#d4af37;--gold2:#f4df95;--cream:#fff4cc;--text:#f8efd4;--muted:#cdbf91;--line:rgba(255,255,255,.14);--ok:#a7efbd;--bad:#ffb1b1;--max:940px}
-*{box-sizing:border-box}body{margin:0;font-family:Georgia,"Times New Roman",serif;color:var(--text);line-height:1.6;background:radial-gradient(circle at 15% 5%,rgba(212,175,55,.18),transparent 30rem),radial-gradient(circle at 90% 10%,rgba(111,66,193,.2),transparent 28rem),var(--bg)}a{color:var(--gold2);text-decoration:none}a:hover{text-decoration:underline}.wrap{width:min(var(--max),calc(100% - 26px));margin:auto}.top{position:sticky;top:0;z-index:20;background:rgba(5,3,2,.9);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.nav{min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:12px;color:var(--cream);font-weight:900}.brand img{width:52px;height:52px;border-radius:50%;border:2px solid var(--gold);object-fit:cover}.brand small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(212,175,55,.7);border-radius:999px;padding:12px 18px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#160d04;font:800 1rem Georgia,"Times New Roman",serif;cursor:pointer}.btn.secondary{background:rgba(255,255,255,.06);color:var(--cream);border-color:var(--line)}button:disabled{opacity:.48;cursor:not-allowed;filter:grayscale(.35)}.hero{padding:54px 0 26px}.eyebrow{display:inline-block;padding:7px 12px;border:1px solid rgba(212,175,55,.38);border-radius:999px;background:rgba(212,175,55,.08);color:var(--gold2);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase}h1{margin:16px 0 0;color:var(--cream);font-size:clamp(2.3rem,7vw,4.9rem);line-height:1.05;letter-spacing:-.045em}h1 span{display:block;color:var(--gold2);font-size:clamp(1.45rem,4vw,2.8rem);margin-top:7px}.lead{max-width:780px;color:var(--muted);font-size:1.12rem}.notice{border-left:4px solid var(--gold);border-radius:14px;padding:13px 15px;background:rgba(212,175,55,.1);color:var(--muted)}main section{padding:28px 0 50px}.formbox{border:1px solid rgba(212,175,55,.34);border-radius:28px;padding:clamp(18px,4vw,36px);background:rgba(14,10,8,.92);box-shadow:0 24px 70px rgba(0,0,0,.55)}fieldset{margin:0 0 19px;padding:20px;border:1px solid var(--line);border-radius:19px;background:rgba(255,255,255,.035)}legend{padding:0 9px;color:var(--gold2);font-weight:900}label{display:block;margin:12px 0 6px;color:var(--cream);font-weight:800}.hint{display:block;color:var(--muted);font-size:.9rem;font-weight:400}input,select,textarea{width:100%;padding:12px 13px;border:1px solid rgba(255,255,255,.19);border-radius:13px;background:rgba(255,255,255,.08);color:var(--cream);font:1rem Georgia,"Times New Roman",serif}select option{background:#170f0b}textarea{min-height:115px;resize:vertical}input:focus,select:focus,textarea:focus{outline:2px solid rgba(212,175,55,.48)}.row{display:grid;grid-template-columns:1fr 1fr;gap:15px}.check{display:flex;align-items:flex-start;gap:10px;color:var(--muted);font-weight:400}.check input{width:auto;margin-top:6px;accent-color:var(--gold)}.actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:18px}.status{display:none;margin-top:18px;padding:16px;border:1px solid rgba(212,175,55,.4);border-radius:16px;background:rgba(212,175,55,.09)}.status.show{display:block}.status.success{color:var(--ok);border-color:rgba(167,239,189,.45)}.status.error{color:var(--bad);border-color:rgba(255,177,177,.45)}#turnstileContainer{min-height:72px;overflow-x:auto}.honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:.9rem}.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.governed{text-align:center;color:var(--gold2);font-size:.82rem;margin-top:16px}@media(max-width:700px){.row{grid-template-columns:1fr}.nav .btn{display:none}.actions{flex-direction:column}.actions .btn{width:100%}fieldset{padding:15px}}
+*{box-sizing:border-box}body{margin:0;font-family:Georgia,"Times New Roman",serif;color:var(--text);line-height:1.6;background:radial-gradient(circle at 15% 5%,rgba(212,175,55,.18),transparent 30rem),radial-gradient(circle at 90% 10%,rgba(111,66,193,.2),transparent 28rem),var(--bg)}a{color:var(--gold2);text-decoration:none}a:hover{text-decoration:underline}.wrap{width:min(var(--max),calc(100% - 26px));margin:auto}.top{position:sticky;top:0;z-index:20;background:rgba(5,3,2,.9);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.nav{min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:12px;color:var(--cream);font-weight:900}.brand img{width:52px;height:52px;border-radius:50%;border:2px solid var(--gold);object-fit:cover}.brand small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(212,175,55,.7);border-radius:999px;padding:12px 18px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#160d04;font:800 1rem Georgia,"Times New Roman",serif;cursor:pointer}.btn.secondary{background:rgba(255,255,255,.06);color:var(--cream);border-color:var(--line)}button:disabled{opacity:.62;cursor:wait}.hero{padding:54px 0 26px}.eyebrow{display:inline-block;padding:7px 12px;border:1px solid rgba(212,175,55,.38);border-radius:999px;background:rgba(212,175,55,.08);color:var(--gold2);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase}h1{margin:16px 0 0;color:var(--cream);font-size:clamp(2.3rem,7vw,4.9rem);line-height:1.05;letter-spacing:-.045em}h1 span{display:block;color:var(--gold2);font-size:clamp(1.45rem,4vw,2.8rem);margin-top:7px}.lead{max-width:780px;color:var(--muted);font-size:1.12rem}.notice{border-left:4px solid var(--gold);border-radius:14px;padding:13px 15px;background:rgba(212,175,55,.1);color:var(--muted)}main section{padding:28px 0 50px}.formbox{border:1px solid rgba(212,175,55,.34);border-radius:28px;padding:clamp(18px,4vw,36px);background:rgba(14,10,8,.92);box-shadow:0 24px 70px rgba(0,0,0,.55)}fieldset{margin:0 0 19px;padding:20px;border:1px solid var(--line);border-radius:19px;background:rgba(255,255,255,.035)}legend{padding:0 9px;color:var(--gold2);font-weight:900}label{display:block;margin:12px 0 6px;color:var(--cream);font-weight:800}.hint{display:block;color:var(--muted);font-size:.9rem;font-weight:400}input,select,textarea{width:100%;padding:12px 13px;border:1px solid rgba(255,255,255,.19);border-radius:13px;background:rgba(255,255,255,.08);color:var(--cream);font:1rem Georgia,"Times New Roman",serif}select option{background:#170f0b}textarea{min-height:115px;resize:vertical}input:focus,select:focus,textarea:focus{outline:2px solid rgba(212,175,55,.48)}.row{display:grid;grid-template-columns:1fr 1fr;gap:15px}.check{display:flex;align-items:flex-start;gap:10px;color:var(--muted);font-weight:400}.check input{width:auto;margin-top:6px;accent-color:var(--gold)}.actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:18px}.status{display:none;margin-top:18px;padding:16px;border:1px solid rgba(212,175,55,.4);border-radius:16px;background:rgba(212,175,55,.09)}.status.show{display:block}.status.success{color:var(--ok);border-color:rgba(167,239,189,.45)}.status.error{color:var(--bad);border-color:rgba(255,177,177,.45)}#turnstileContainer{min-height:72px;overflow-x:auto}.honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:.9rem}.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.governed{text-align:center;color:var(--gold2);font-size:.82rem;margin-top:16px}@media(max-width:700px){.row{grid-template-columns:1fr}.nav .btn{display:none}.actions{flex-direction:column}.actions .btn{width:100%}fieldset{padding:15px}}
 </style>
 </head>
 <body>
@@ -24,17 +24,18 @@
 <fieldset><legend>3. Main Concern</legend><label for="concernType">Primary Reason for Seeking Divination *</label><select id="concernType" required><option value="">Choose one</option><option>Destiny / life direction</option><option>Relationship / family matter</option><option>Ancestor concern</option><option>Orisha guidance</option><option>Initiation readiness</option><option>Repeated obstacles</option><option>Business / calling / service</option><option>Spiritual blockage</option><option>Health-related spiritual concern</option><option>Other</option></select><label for="mainConcern">Primary reason you are seeking divination now *</label><textarea id="mainConcern" required maxlength="3000"></textarea><label for="timing">Why now?</label><textarea id="timing" maxlength="2000"></textarea></fieldset>
 <fieldset><legend>4. Questions for the Oracle</legend><label for="question1">Question 1 *</label><textarea id="question1" required maxlength="1500"></textarea><label for="question2">Question 2</label><textarea id="question2" maxlength="1500"></textarea><label for="question3">Question 3</label><textarea id="question3" maxlength="1500"></textarea></fieldset>
 <fieldset><legend>5. Consent & Understanding</legend><label class="check"><input id="consentSpiritual" type="checkbox" required><span><strong>I understand this is a spiritual consultation</strong> using Ifá and Khemetic Tehuti divination.</span></label><label class="check"><input id="consentDisclaimer" type="checkbox" required><span><strong>I understand this is not medical, legal, financial, or mental-health treatment.</strong></span></label><label class="check"><input id="consentEbo" type="checkbox" required><span><strong>I understand ebo, prayer, offering, devotional discipline, behavioral correction, or spiritual action may be recommended.</strong></span></label><label class="check"><input id="consentPayment" type="checkbox" required><span><strong>I understand payment is required before the consultation is confirmed.</strong></span></label></fieldset>
-<fieldset><legend>6. Security Check</legend><p class="hint">Complete the Cloudflare security check before submitting.</p><div
-  id="turnstileContainer"
-  class="cf-turnstile"
-  data-sitekey="0x4AAAAAAD0vcjPOTQq4vYsS"
-  data-theme="dark"
-  data-callback="onTurnstileSuccess"
-  data-expired-callback="onTurnstileExpired"
-  data-error-callback="onTurnstileError"
-></div></fieldset>
+<fieldset>
+  <legend>6. Security Check</legend>
+  <p class="hint">Complete the Cloudflare security check before submitting.</p>
+  <div id="turnstileContainer">
+    <span class="hint">Loading Cloudflare security verification…</span>
+  </div>
+  <p id="turnstileState" class="hint" aria-live="polite">
+    The Submit button remains clickable. The page will verify the security token when pressed.
+  </p>
+</fieldset>
 <div class="honeypot" aria-hidden="true"><label for="website">Website</label><input id="website" tabindex="-1" autocomplete="off"></div>
-<div class="actions"><button id="submitButton" class="btn" type="submit" disabled>Submit Secure Intake</button><button class="btn secondary" type="reset">Clear Form</button><a class="btn secondary" href="payment.html">Payment Page</a></div><div id="status" class="status" role="status" aria-live="polite"></div>
+<div class="actions"><button id="submitButton" class="btn" type="submit">Submit Secure Intake</button><button class="btn secondary" type="reset">Clear Form</button><a class="btn secondary" href="payment.html">Payment Page</a></div><div id="status" class="status" role="status" aria-live="polite"></div>
 </form></div></section>
 </main>
 <footer><div class="wrap"><div class="foot"><div><strong>YourBabalawo.com</strong><br>Koleoso: The Ifá Oracle of Tehuti</div><div>SwamiG Institute<br><a href="mailto:baba@swamiginstitute.com">baba@swamiginstitute.com</a> | <a href="tel:+18507926442">850-SWAMIG2</a></div></div><p>© <span id="year"></span> SwamiG Institute. Spiritual consultation is offered for religious, educational, and devotional purposes.</p><div class="governed">Governed by Geb Irete / Nekhebet Hetep Irosun Meji</div></div></footer>
@@ -42,8 +43,8 @@
 (() => {
   "use strict";
 
-  const API = "https://secure.yourbabalawo.com";
-  const SITE_KEY = "0x4AAAAAAD0vcjPOTQq4vYsS";
+  const API_ENDPOINT = "https://secure.yourbabalawo.com/api/intake";
+  const TURNSTILE_SITE_KEY = "0x4AAAAAAD0vcjPOTQq4vYsS";
 
   const form = document.getElementById("intakeForm");
   const statusBox = document.getElementById("status");
@@ -51,9 +52,8 @@
   const turnstileContainer = document.getElementById("turnstileContainer");
   const turnstileState = document.getElementById("turnstileState");
 
-  let turnstileToken = "";
-  let turnstileWidgetId = null;
-  let securityReady = false;
+  let widgetId = null;
+  let callbackToken = "";
 
   document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -61,7 +61,7 @@
     return (value || "").toString().replace(/\s+/g, " ").trim();
   }
 
-  function value(id) {
+  function getValue(id) {
     const element = document.getElementById(id);
     return element ? element.value : "";
   }
@@ -84,59 +84,77 @@
     statusBox.append(heading, paragraph);
   }
 
-  function setSecurityState(message, isSuccess = false) {
-    turnstileState.textContent = message;
-    turnstileState.style.color = isSuccess ? "var(--ok)" : "var(--muted)";
+  function clearStatus() {
+    statusBox.className = "status";
+    statusBox.innerHTML = "";
   }
 
-  function collectPayload() {
-    return {
-      fullName: clean(value("fullName")),
-      email: clean(value("email")),
-      phone: clean(value("phone")),
-      location: clean(value("location")),
-      contactMethod: clean(value("contactMethod")),
+  function setTurnstileState(message, success = false) {
+    turnstileState.textContent = message;
+    turnstileState.style.color = success ? "var(--ok)" : "var(--muted)";
+  }
 
-      ifaBefore: clean(value("ifaBefore")),
-      tehutiBefore: clean(value("tehutiBefore")),
-      initiationStatus: clean(value("initiationStatus")),
-      house: value("house").trim(),
+  function getTurnstileToken() {
+    if (callbackToken) return callbackToken;
 
-      concernType: clean(value("concernType")),
-      mainConcern: value("mainConcern").trim(),
-      timing: value("timing").trim(),
+    if (
+      window.turnstile &&
+      typeof window.turnstile.getResponse === "function" &&
+      widgetId !== null
+    ) {
+      const response = window.turnstile.getResponse(widgetId);
+      if (response) return response;
+    }
 
-      question1: value("question1").trim(),
-      question2: value("question2").trim(),
-      question3: value("question3").trim(),
+    const hiddenResponse = document.querySelector(
+      'input[name="cf-turnstile-response"]'
+    );
 
-      consentSpiritualConsultation: isChecked("consentSpiritual"),
-      consentNotMedicalLegalFinancial: isChecked("consentDisclaimer"),
-      consentEboCorrection: isChecked("consentEbo"),
-      consentPaymentRequired: isChecked("consentPayment"),
-
-      turnstileToken,
-      website: clean(value("website")),
-      sourcePage: window.location.href
-    };
+    return hiddenResponse ? hiddenResponse.value : "";
   }
 
   function resetTurnstile() {
-    turnstileToken = "";
-    securityReady = false;
-    submitButton.disabled = true;
-    setSecurityState("Complete the security check before submitting.");
+    callbackToken = "";
 
     if (
       window.turnstile &&
       typeof window.turnstile.reset === "function" &&
-      turnstileWidgetId !== null
+      widgetId !== null
     ) {
-      window.turnstile.reset(turnstileWidgetId);
+      window.turnstile.reset(widgetId);
     }
+
+    setTurnstileState("Complete the security check before submitting.");
   }
 
-  function showInvalidFields() {
+  function collectPayload(turnstileToken) {
+    return {
+      fullName: clean(getValue("fullName")),
+      email: clean(getValue("email")),
+      phone: clean(getValue("phone")),
+      location: clean(getValue("location")),
+      contactMethod: clean(getValue("contactMethod")),
+      ifaBefore: clean(getValue("ifaBefore")),
+      tehutiBefore: clean(getValue("tehutiBefore")),
+      initiationStatus: clean(getValue("initiationStatus")),
+      house: getValue("house").trim(),
+      concernType: clean(getValue("concernType")),
+      mainConcern: getValue("mainConcern").trim(),
+      timing: getValue("timing").trim(),
+      question1: getValue("question1").trim(),
+      question2: getValue("question2").trim(),
+      question3: getValue("question3").trim(),
+      consentSpiritualConsultation: isChecked("consentSpiritual"),
+      consentNotMedicalLegalFinancial: isChecked("consentDisclaimer"),
+      consentEboCorrection: isChecked("consentEbo"),
+      consentPaymentRequired: isChecked("consentPayment"),
+      turnstileToken,
+      website: clean(getValue("website")),
+      sourcePage: window.location.href
+    };
+  }
+
+  function showFirstInvalidField() {
     const invalidFields = Array.from(
       form.querySelectorAll("input:invalid, select:invalid, textarea:invalid")
     );
@@ -144,31 +162,38 @@
     if (!invalidFields.length) return false;
 
     const firstInvalid = invalidFields[0];
-    const label = firstInvalid.id
+    const associatedLabel = firstInvalid.id
       ? form.querySelector(`label[for="${firstInvalid.id}"]`)
       : null;
 
-    const fieldName = label
-      ? clean(label.textContent.replace("*", ""))
+    const fieldName = associatedLabel
+      ? clean(associatedLabel.textContent.replace("*", ""))
       : "a required field";
 
     showStatus(
       "Please complete the required fields.",
-      `${invalidFields.length} required item(s) still need attention. Start with: ${fieldName}.`,
+      `${invalidFields.length} required item(s) need attention. Start with: ${fieldName}.`,
       "error"
     );
 
     firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
-    window.setTimeout(() => firstInvalid.focus({ preventScroll: true }), 350);
+
+    window.setTimeout(() => {
+      try {
+        firstInvalid.focus({ preventScroll: true });
+      } catch (_) {
+        firstInvalid.focus();
+      }
+    }, 350);
+
     return true;
   }
 
-  // Called by Cloudflare after the Turnstile API is fully loaded.
   window.initializeYourBabalawoTurnstile = function () {
     if (!window.turnstile || typeof window.turnstile.render !== "function") {
       showStatus(
         "Security check unavailable.",
-        "Cloudflare Turnstile did not load correctly. Refresh the page.",
+        "Cloudflare Turnstile did not initialize. Refresh the page.",
         "error"
       );
       return;
@@ -176,58 +201,57 @@
 
     turnstileContainer.innerHTML = "";
 
-    turnstileWidgetId = window.turnstile.render(turnstileContainer, {
-      sitekey: SITE_KEY,
-      theme: "dark",
+    try {
+      widgetId = window.turnstile.render(turnstileContainer, {
+        sitekey: TURNSTILE_SITE_KEY,
+        theme: "dark",
 
-      callback(token) {
-        turnstileToken = token;
-        securityReady = true;
-        submitButton.disabled = false;
-        setSecurityState("Security verified. You may now submit the intake.", true);
+        callback(token) {
+          callbackToken = token;
+          setTurnstileState(
+            "Security verified. Press Submit Secure Intake.",
+            true
+          );
+          clearStatus();
+        },
 
-        if (
-          statusBox.classList.contains("error") &&
-          statusBox.textContent.includes("Security")
-        ) {
-          statusBox.className = "status";
-          statusBox.innerHTML = "";
+        "expired-callback"() {
+          callbackToken = "";
+          setTurnstileState(
+            "The security check expired. Complete it again."
+          );
+        },
+
+        "timeout-callback"() {
+          callbackToken = "";
+          setTurnstileState(
+            "The security check timed out. Complete it again."
+          );
+        },
+
+        "error-callback"(errorCode) {
+          callbackToken = "";
+          showStatus(
+            "Security check error.",
+            `Turnstile reported ${errorCode || "an unknown error"}. Refresh the page and try again.`,
+            "error"
+          );
         }
-      },
-
-      "expired-callback"() {
-        resetTurnstile();
-        showStatus(
-          "Security check expired.",
-          "Complete the Cloudflare security check again.",
-          "error"
-        );
-      },
-
-      "timeout-callback"() {
-        resetTurnstile();
-        showStatus(
-          "Security check timed out.",
-          "Complete the Cloudflare security check again.",
-          "error"
-        );
-      },
-
-      "error-callback"() {
-        resetTurnstile();
-        showStatus(
-          "Security check unavailable.",
-          "Refresh the page and confirm that yourbabalawo.com is authorized in the Turnstile widget.",
-          "error"
-        );
-      }
-    });
+      });
+    } catch (error) {
+      showStatus(
+        "Security check unavailable.",
+        error && error.message
+          ? error.message
+          : "Turnstile could not be rendered.",
+        "error"
+      );
+    }
   };
 
   form.addEventListener("reset", () => {
     window.setTimeout(() => {
-      statusBox.className = "status";
-      statusBox.innerHTML = "";
+      clearStatus();
       resetTurnstile();
     }, 0);
   });
@@ -236,17 +260,24 @@
     event.preventDefault();
 
     if (!form.checkValidity()) {
-      showInvalidFields();
+      showFirstInvalidField();
       return;
     }
 
-    if (!securityReady || !turnstileToken) {
+    const turnstileToken = getTurnstileToken();
+
+    if (!turnstileToken) {
       showStatus(
-        "Security check required.",
-        "Complete the Cloudflare security check before submitting.",
+        "Security verification is required.",
+        "The Turnstile box may show Success, but no token was received. Tap the security box again or refresh the page.",
         "error"
       );
-      turnstileContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      turnstileContainer.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
       return;
     }
 
@@ -259,7 +290,7 @@
     );
 
     try {
-      const response = await fetch(API + "/api/intake", {
+      const response = await fetch(API_ENDPOINT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -267,13 +298,16 @@
         },
         mode: "cors",
         credentials: "omit",
-        body: JSON.stringify(collectPayload())
+        body: JSON.stringify(collectPayload(turnstileToken))
       });
 
       const result = await response.json().catch(() => ({}));
 
       if (!response.ok || !result.ok) {
-        throw new Error(result.error || "The intake could not be saved.");
+        throw new Error(
+          result.error ||
+          `The secure intake service returned HTTP ${response.status}.`
+        );
       }
 
       try {
@@ -302,26 +336,35 @@
       payment.textContent = "Continue to Payment";
 
       statusBox.append(heading, confirmation, instruction, payment);
-      statusBox.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      statusBox.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
     } catch (error) {
       showStatus(
         "Intake was not saved.",
-        (error && error.message ? error.message : "A network error occurred.") +
+        (error && error.message
+          ? error.message
+          : "A network error occurred.") +
           " Please try again or call/text 850-SWAMIG2.",
         "error"
       );
 
       resetTurnstile();
-      statusBox.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      statusBox.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
     } finally {
+      submitButton.disabled = false;
       submitButton.textContent = "Submit Secure Intake";
-      if (securityReady) submitButton.disabled = false;
     }
   });
 
-  // A visible fallback instead of a silently inactive button.
   window.setTimeout(() => {
-    if (turnstileWidgetId === null) {
+    if (widgetId === null) {
       showStatus(
         "Turnstile has not loaded.",
         "Refresh the page. If the problem continues, call or text 850-SWAMIG2.",
