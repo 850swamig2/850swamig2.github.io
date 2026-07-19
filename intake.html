@@ -16,7 +16,7 @@
 <body>
 <header class="top"><div class="wrap nav"><a class="brand" href="index.html"><img src="SwamiG.gif" alt="SwamiG Institute logo"><span>Your Babalawo<small>SwamiG Institute</small></span></a><a class="btn" href="tel:+18507926442">Call 850-SWAMIG2</a></div></header>
 <main>
-<section class="hero"><div class="wrap"><div class="eyebrow">Secure Divination Client Intake</div><h1>Koleoso Intake <span>The Ifá Oracle of Tehuti</span></h1><p class="lead">Begin your premium Ifá and Khemetic Tehuti consultation by submitting your contact information, spiritual background, primary concern, and up to three serious questions.</p><div class="notice"><strong>First step: Divination.</strong> Your intake is transmitted to the Cloudflare D1 database. Submission does not confirm an appointment until payment and scheduling are completed.</div></div></section>
+<section class="hero"><div class="wrap"><div class="eyebrow">Secure Divination Client Intake</div><h1>Koleoso Intake <span>The Ifá Oracle of Tehuti</span></h1><p class="lead">Begin your premium Ifá and Khemetic Tehuti consultation by submitting your contact information, spiritual background, primary concern, and up to three serious questions.</p><div class="notice"><strong>First step: Divination.</strong> Your intake is securely processed and stored within the same Cloudflare Pages application. Submission does not confirm an appointment until payment and scheduling are completed.</div></div></section>
 <section><div class="wrap formbox">
 <form id="intakeForm" novalidate>
 <fieldset><legend>1. Client Information</legend><div class="row"><div><label for="fullName">Full Name *</label><input id="fullName" required maxlength="120" autocomplete="name"></div><div><label for="email">Email Address *</label><input id="email" type="email" required maxlength="254" autocomplete="email"></div></div><div class="row"><div><label for="phone">Phone / Text Number *</label><input id="phone" required maxlength="40" autocomplete="tel"></div><div><label for="location">City / State / Country</label><input id="location" maxlength="180"></div></div><label for="contactMethod">Preferred Contact Method *</label><select id="contactMethod" required><option value="">Choose one</option><option>Email</option><option>Text</option><option>Phone Call</option><option>Zoom</option></select></fieldset>
@@ -31,7 +31,7 @@
     <span class="hint">Loading Cloudflare security verification…</span>
   </div>
   <p id="turnstileState" class="hint" aria-live="polite">
-    The Submit button remains clickable. The page will verify the security token when pressed.
+    Complete the security check, then press Submit Secure Intake.
   </p>
 </fieldset>
 <div class="honeypot" aria-hidden="true"><label for="website">Website</label><input id="website" tabindex="-1" autocomplete="off"></div>
@@ -43,7 +43,7 @@
 (() => {
   "use strict";
 
-  const API_ENDPOINT = "https://secure.yourbabalawo.com/api/intake";
+  const API_ENDPOINT = "/api/intake";
   const TURNSTILE_SITE_KEY = "0x4AAAAAAD0vcjPOTQq4vYsS";
 
   const form = document.getElementById("intakeForm");

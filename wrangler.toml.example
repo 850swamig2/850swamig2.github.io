@@ -1,16 +1,11 @@
-# Optional Wrangler config for local development.
-# Cloudflare Pages can also be configured entirely through the dashboard.
-# Replace database_id after creating the D1 database.
+# Rename to wrangler.toml only if you choose Wrangler-based configuration.
+# Dashboard bindings are also supported.
 
 name = "yourbabalawo"
-compatibility_date = "2026-07-10"
 pages_build_output_dir = "."
+compatibility_date = "2026-07-19"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "yourbabalawo-db"
-database_id = "PASTE_YOUR_D1_DATABASE_ID_HERE"
-
-# Add secrets/environment variables in Cloudflare dashboard:
-# ADMIN_TOKEN
-# TURNSTILE_SECRET_KEY
+database_name = "REPLACE_WITH_YOUR_D1_DATABASE_NAME"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
