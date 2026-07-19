@@ -1,2 +1,3 @@
-/intake  /intake.html  301
-/admin   /admin.html   302
+# No redirect is needed for intake.html.
+# Cloudflare Pages automatically serves intake.html at /intake
+# and redirects /intake.html to /intake.
