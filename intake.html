@@ -54,6 +54,7 @@
 
   let widgetId = null;
   let callbackToken = "";
+  let preserveConfirmationAfterReset = false;
 
   document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -251,8 +252,13 @@
 
   form.addEventListener("reset", () => {
     window.setTimeout(() => {
-      clearStatus();
       resetTurnstile();
+
+      if (!preserveConfirmationAfterReset) {
+        clearStatus();
+      }
+
+      preserveConfirmationAfterReset = false;
     }, 0);
   });
 
@@ -314,6 +320,7 @@
         localStorage.setItem("koleoso_last_intake_id", result.intakeId);
       } catch (_) {}
 
+      preserveConfirmationAfterReset = true;
       form.reset();
 
       statusBox.className = "status show success";
@@ -327,7 +334,7 @@
 
       const instruction = document.createElement("p");
       instruction.textContent =
-        "Retain this number, then continue to payment.";
+        "Retain or photograph this confirmation number, then continue to payment.";
 
       const payment = document.createElement("a");
       payment.className = "btn";
