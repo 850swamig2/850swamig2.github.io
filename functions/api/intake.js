@@ -1,387 +1,357 @@
 const JSON_HEADERS = {
-  "Content-Type": "application/json; charset=utf-8",
-  "Cache-Control": "no-store",
-  "X-Content-Type-Options": "nosniff"
+  "content-type": "application/json; charset=utf-8",
+  "cache-control": "no-store",
+  "x-content-type-options": "nosniff"
 };
 
-const MAX_BODY_BYTES = 30_000;
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function json(data, status = 200, extraHeaders = {}) {
-  return new Response(JSON.stringify(data), {
+function json(body, status = 200, extraHeaders = {}) {
+  return new Response(JSON.stringify(body), {
     status,
     headers: { ...JSON_HEADERS, ...extraHeaders }
   });
 }
 
-function oneLine(value, maxLength = 500) {
-  return typeof value === "string"
-    ? value.trim().replace(/\s+/g, " ").slice(0, maxLength)
-    : "";
+function text(value, maxLength = 2000) {
+  return (value ?? "").toString().trim().slice(0, maxLength);
 }
 
-function longText(value, maxLength = 3000) {
-  return typeof value === "string"
-    ? value.trim().replace(/\r\n/g, "\n").slice(0, maxLength)
-    : "";
+function flag(value) {
+  return value === true;
 }
 
-function required(value, label, maxLength, multiline = false) {
-  const cleaned = multiline
-    ? longText(value, maxLength)
-    : oneLine(value, maxLength);
+function randomToken(byteLength = 32) {
+  const bytes = new Uint8Array(byteLength);
+  crypto.getRandomValues(bytes);
 
-  if (!cleaned) {
-    throw new Error(`REQUIRED:${label}`);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+
+  return btoa(binary)
+    .replaceAll("+", "-")
+    .replaceAll("/", "_")
+    .replaceAll("=", "");
+}
+
+function randomReference() {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes = new Uint8Array(8);
+  crypto.getRandomValues(bytes);
+
+  let suffix = "";
+  for (const byte of bytes) {
+    suffix += alphabet[byte % alphabet.length];
   }
 
-  return cleaned;
+  return `KOL-${new Date().getUTCFullYear()}-${suffix}`;
 }
 
-function allowedTurnstileHostnames(request, env) {
-  const configured = oneLine(env.TURNSTILE_ALLOWED_HOSTNAMES, 1000);
+async function sha256Hex(value) {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(value)
+  );
 
-  if (configured) {
-    return new Set(
-      configured
-        .split(",")
-        .map((hostname) => hostname.trim().toLowerCase())
-        .filter(Boolean)
-    );
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function validatePayload(payload) {
+  const errors = [];
+
+  if (!payload.fullName) errors.push("Full name is required.");
+  if (!payload.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+    errors.push("A valid email address is required.");
+  }
+  if (!payload.phone) errors.push("Phone or text number is required.");
+  if (!payload.contactMethod) errors.push("Preferred contact method is required.");
+  if (!payload.ifaBefore) errors.push("Ifá divination history is required.");
+  if (!payload.concernType) errors.push("Concern category is required.");
+  if (!payload.mainConcern) errors.push("Primary concern is required.");
+  if (!payload.question1) errors.push("Question 1 is required.");
+
+  if (!payload.consentSpiritualConsultation) {
+    errors.push("Spiritual consultation consent is required.");
+  }
+  if (!payload.consentNotMedicalLegalFinancial) {
+    errors.push("Professional-care disclaimer consent is required.");
+  }
+  if (!payload.consentEboCorrection) {
+    errors.push("Ebo or corrective-action consent is required.");
+  }
+  if (!payload.consentPaymentRequired) {
+    errors.push("Payment requirement consent is required.");
   }
 
-  return new Set([new URL(request.url).hostname.toLowerCase()]);
+  return errors;
 }
 
 async function verifyTurnstile(request, env, token) {
   if (!env.TURNSTILE_SECRET_KEY) {
-    console.error("TURNSTILE_SECRET_KEY is not configured.");
     return {
       ok: false,
-      status: 503,
-      error: "Security verification is not configured on the server."
+      error: "TURNSTILE_SECRET_KEY is not configured."
     };
   }
 
   if (!token) {
     return {
       ok: false,
-      status: 403,
       error: "Complete the Cloudflare security check."
     };
   }
 
-  const form = new FormData();
-  form.append("secret", env.TURNSTILE_SECRET_KEY);
-  form.append("response", token);
-  form.append("idempotency_key", crypto.randomUUID());
+  const formData = new FormData();
+  formData.set("secret", env.TURNSTILE_SECRET_KEY);
+  formData.set("response", token);
 
   const remoteIp = request.headers.get("CF-Connecting-IP");
-  if (remoteIp) {
-    form.append("remoteip", remoteIp);
-  }
+  if (remoteIp) formData.set("remoteip", remoteIp);
 
-  try {
-    const response = await fetch(
-      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-      {
-        method: "POST",
-        body: form
-      }
-    );
-
-    const result = await response.json();
-
-    if (!response.ok || !result.success) {
-      console.warn(
-        "Turnstile rejected divination intake:",
-        result?.["error-codes"] || []
-      );
-
-      return {
-        ok: false,
-        status: 403,
-        error: "Security verification failed. Refresh the form and try again."
-      };
+  const response = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    {
+      method: "POST",
+      body: formData
     }
+  );
 
-    const hostname = oneLine(result.hostname, 255).toLowerCase();
-    const allowed = allowedTurnstileHostnames(request, env);
+  const result = await response.json();
 
-    if (!allowed.has(hostname)) {
-      console.warn("Turnstile hostname mismatch:", {
-        received: hostname,
-        allowed: Array.from(allowed)
-      });
-
-      return {
-        ok: false,
-        status: 403,
-        error: "Security verification was issued for an unauthorized hostname."
-      };
-    }
-
-    return { ok: true, hostname };
-  } catch (error) {
-    console.error("Turnstile Siteverify request failed:", error);
-
+  if (!result.success) {
     return {
       ok: false,
-      status: 503,
-      error: "Security verification is temporarily unavailable."
+      error: "Cloudflare security verification failed."
     };
   }
+
+  const expectedHostname = text(
+    env.TURNSTILE_EXPECTED_HOSTNAME || "",
+    255
+  ).toLowerCase();
+
+  if (
+    expectedHostname &&
+    text(result.hostname, 255).toLowerCase() !== expectedHostname
+  ) {
+    return {
+      ok: false,
+      error: "Cloudflare security verification returned an unexpected hostname."
+    };
+  }
+
+  return { ok: true };
 }
 
 export async function onRequestPost(context) {
   const { request, env } = context;
 
   if (!env.DB) {
-    return json(
-      { ok: false, error: "D1 binding DB is not configured." },
-      503
-    );
-  }
-
-  const contentLength = Number(request.headers.get("Content-Length") || 0);
-  if (contentLength > MAX_BODY_BYTES) {
-    return json({ ok: false, error: "The intake is too large." }, 413);
-  }
-
-  const contentType = request.headers.get("Content-Type") || "";
-  if (!contentType.includes("application/json")) {
-    return json(
-      { ok: false, error: "Unsupported submission format." },
-      415
-    );
+    return json({ ok: false, error: "D1 binding DB is not configured." }, 500);
   }
 
   try {
-    const payload = await request.json();
-
-    if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
-      return json({ ok: false, error: "Invalid intake data." }, 400);
+    const contentType = request.headers.get("content-type") || "";
+    if (!contentType.toLowerCase().includes("application/json")) {
+      return json({ ok: false, error: "Send the intake as JSON." }, 415);
     }
 
-    // Honeypot: acknowledge obvious automated submissions without storing them.
-    if (oneLine(payload.website, 200)) {
-      return json({ ok: true, intakeId: "received" }, 201);
+    const body = await request.json();
+
+    if (text(body.website, 250)) {
+      return json({ ok: true, message: "Submission received." }, 201);
     }
 
-    const fullName = required(payload.fullName, "Full name", 120);
-    const email = required(payload.email, "Email", 254).toLowerCase();
-    const phone = required(payload.phone, "Phone or text number", 40);
-    const location = oneLine(payload.location, 180);
-    const contactMethod = required(
-      payload.contactMethod,
-      "Preferred contact method",
-      40
-    );
+    const payload = {
+      fullName: text(body.fullName, 120),
+      email: text(body.email, 254).toLowerCase(),
+      phone: text(body.phone, 40),
+      location: text(body.location, 180),
+      contactMethod: text(body.contactMethod, 60),
 
-    const ifaBefore = required(
-      payload.ifaBefore,
-      "Previous Ifá divination answer",
-      20
-    );
-    const tehutiBefore = oneLine(payload.tehutiBefore, 20);
-    const initiationStatus = oneLine(payload.initiationStatus, 100);
-    const spiritualHouse = longText(payload.house, 1500);
+      ifaBefore: text(body.ifaBefore, 60),
+      tehutiBefore: text(body.tehutiBefore, 60),
+      initiationStatus: text(body.initiationStatus, 120),
+      house: text(body.house, 1500),
 
-    const concernType = required(
-      payload.concernType,
-      "Primary concern category",
-      120
-    );
-    const mainConcern = required(
-      payload.mainConcern,
-      "Primary reason",
-      3000,
-      true
-    );
-    const whyNow = longText(payload.timing, 2000);
+      concernType: text(body.concernType, 180),
+      mainConcern: text(body.mainConcern, 3000),
+      timing: text(body.timing, 2000),
 
-    const question1 = required(
-      payload.question1,
-      "Question 1",
-      1500,
-      true
-    );
-    const question2 = longText(payload.question2, 1500);
-    const question3 = longText(payload.question3, 1500);
+      question1: text(body.question1, 1500),
+      question2: text(body.question2, 1500),
+      question3: text(body.question3, 1500),
 
-    const consentSpiritual =
-      payload.consentSpiritualConsultation === true;
-    const consentDisclaimer =
-      payload.consentNotMedicalLegalFinancial === true;
-    const consentEbo = payload.consentEboCorrection === true;
-    const consentPayment = payload.consentPaymentRequired === true;
+      consentSpiritualConsultation: flag(body.consentSpiritualConsultation),
+      consentNotMedicalLegalFinancial: flag(body.consentNotMedicalLegalFinancial),
+      consentEboCorrection: flag(body.consentEboCorrection),
+      consentPaymentRequired: flag(body.consentPaymentRequired)
+    };
 
-    if (!EMAIL_PATTERN.test(email)) {
-      return json({ ok: false, error: "Enter a valid email address." }, 400);
+    const errors = validatePayload(payload);
+    if (errors.length) {
+      return json({ ok: false, error: errors.join(" ") }, 400);
     }
 
-    if (
-      !consentSpiritual ||
-      !consentDisclaimer ||
-      !consentEbo ||
-      !consentPayment
-    ) {
-      return json(
-        { ok: false, error: "All consent statements must be accepted." },
-        400
-      );
-    }
-
-    const turnstile = await verifyTurnstile(
+    const turnstileResult = await verifyTurnstile(
       request,
       env,
-      oneLine(payload.turnstileToken, 2048)
+      text(body.turnstileToken, 4096)
     );
 
-    if (!turnstile.ok) {
-      return json(
-        { ok: false, error: turnstile.error },
-        turnstile.status
-      );
+    if (!turnstileResult.ok) {
+      return json({ ok: false, error: turnstileResult.error }, 400);
     }
 
-    const intakeId = crypto.randomUUID();
-    const createdAt = new Date().toISOString();
-    const requestUrl = new URL(request.url);
-    const sourceOrigin = requestUrl.origin;
-    const sourcePage = oneLine(payload.sourcePage, 500);
+    const internalId = crypto.randomUUID();
+    const publicReference = randomReference();
+    const confirmationToken = randomToken(32);
+    const confirmationTokenHash = await sha256Hex(confirmationToken);
 
-    const payloadJson = JSON.stringify({
-      form_version: "KOLEOSO-INTAKE-CLOUDFLARE-2026-07",
-      intake_id: intakeId,
-      created_at: createdAt,
-      source: {
-        origin: sourceOrigin,
-        page: sourcePage,
-        turnstile_hostname: turnstile.hostname,
-        network_country: oneLine(request.cf?.country || "", 8)
-      },
-      client: {
-        full_name: fullName,
-        email,
-        phone,
-        location,
-        preferred_contact_method: contactMethod
-      },
-      spiritual_background: {
-        received_ifa_divination_before: ifaBefore,
-        received_tehuti_divination_before: tehutiBefore,
-        initiation_status: initiationStatus,
-        godparent_elder_or_spiritual_house: spiritualHouse
-      },
-      divination_request: {
-        concern_category: concernType,
-        primary_reason: mainConcern,
-        why_now: whyNow,
-        questions: [question1, question2, question3].filter(Boolean)
-      },
-      consent: {
-        spiritual_consultation: true,
-        not_medical_legal_financial_or_mental_health: true,
-        ebo_or_correction_may_be_recommended: true,
-        payment_required_before_confirmation: true
-      }
+    const now = new Date();
+    const createdAt = now.toISOString();
+    const tokenExpiresAt = new Date(
+      now.getTime() + 48 * 60 * 60 * 1000
+    ).toISOString();
+
+    const rawJson = JSON.stringify({
+      ...payload,
+      sourcePage: text(body.sourcePage, 1000),
+      submittedAt: createdAt
     });
 
-    const result = await env.DB.prepare(`
-      INSERT INTO divination_intakes (
-        intake_id,
+    const networkCountry = text(request.cf?.country || "", 20);
+    const userAgent = text(request.headers.get("user-agent"), 500);
+
+    const intakeStatement = env.DB.prepare(`
+      INSERT INTO intake_submissions (
+        id,
         created_at,
+        updated_at,
         status,
         full_name,
         email,
         phone,
         location,
-        contact_method,
-        ifa_before,
-        tehuti_before,
-        initiation_status,
-        spiritual_house,
-        concern_type,
-        main_concern,
+        preferred_contact_method,
+        received_ifa_before,
+        received_tehuti_before,
+        spiritual_or_initiation_status,
+        godparent_elder_spiritual_house,
+        primary_concern_category,
+        primary_reason,
         why_now,
         question_1,
         question_2,
         question_3,
-        consent_spiritual,
-        consent_disclaimer,
-        consent_ebo,
-        consent_payment,
-        source_origin,
-        source_page,
-        payload_json
+        consent_spiritual_consultation,
+        consent_not_medical_legal_financial,
+        consent_ebo_correction,
+        consent_payment_required,
+        ip_hint,
+        user_agent,
+        raw_json,
+        public_reference,
+        confirmation_token_hash,
+        token_expires_at,
+        payment_status
       ) VALUES (
-        ?, ?, 'New', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        1, 1, 1, 1, ?, ?, ?
+        ?, ?, ?, 'submitted',
+        ?, ?, ?, ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?,
+        ?, ?, ?,
+        ?, ?, ?, ?,
+        ?, ?, ?,
+        ?, ?, ?, 'unpaid'
       )
     `).bind(
-      intakeId,
+      internalId,
       createdAt,
-      fullName,
-      email,
-      phone,
-      location,
-      contactMethod,
-      ifaBefore,
-      tehutiBefore,
-      initiationStatus,
-      spiritualHouse,
-      concernType,
-      mainConcern,
-      whyNow,
-      question1,
-      question2,
-      question3,
-      sourceOrigin,
-      sourcePage,
-      payloadJson
-    ).run();
+      createdAt,
+      payload.fullName,
+      payload.email,
+      payload.phone,
+      payload.location,
+      payload.contactMethod,
+      payload.ifaBefore,
+      payload.tehutiBefore,
+      payload.initiationStatus,
+      payload.house,
+      payload.concernType,
+      payload.mainConcern,
+      payload.timing,
+      payload.question1,
+      payload.question2,
+      payload.question3,
+      payload.consentSpiritualConsultation ? 1 : 0,
+      payload.consentNotMedicalLegalFinancial ? 1 : 0,
+      payload.consentEboCorrection ? 1 : 0,
+      payload.consentPaymentRequired ? 1 : 0,
+      networkCountry,
+      userAgent,
+      rawJson,
+      publicReference,
+      confirmationTokenHash,
+      tokenExpiresAt
+    );
 
-    if (!result.success) {
-      throw new Error("D1_INSERT_FAILED");
-    }
+    const eventStatement = env.DB.prepare(`
+      INSERT INTO interaction_log (
+        id,
+        intake_id,
+        created_at,
+        event_type,
+        summary,
+        metadata_json
+      ) VALUES (?, ?, ?, 'intake_submitted', ?, ?)
+    `).bind(
+      crypto.randomUUID(),
+      internalId,
+      createdAt,
+      `Intake ${publicReference} submitted and awaiting applicant confirmation.`,
+      JSON.stringify({ publicReference, status: "submitted" })
+    );
+
+    await env.DB.batch([intakeStatement, eventStatement]);
+
+    const next =
+      "/confirmation.html?token=" +
+      encodeURIComponent(confirmationToken);
 
     return json(
       {
         ok: true,
-        message: "Divination intake received and saved.",
-        intakeId
+        message: "Intake saved. Review and confirm the information.",
+        intakeId: publicReference,
+        publicReference,
+        next
       },
       201
     );
   } catch (error) {
+    console.error("Intake submission failed:", error);
+
+    const message = String(error?.message || "");
+
     if (
-      typeof error?.message === "string" &&
-      error.message.startsWith("REQUIRED:")
+      message.includes("no column named public_reference") ||
+      message.includes("confirmation_token_hash")
     ) {
       return json(
         {
           ok: false,
-          error: `${error.message.slice("REQUIRED:".length)} is required.`
+          error:
+            "The intake confirmation migration has not been applied to D1."
         },
-        400
+        500
       );
     }
-
-    if (error instanceof SyntaxError) {
-      return json(
-        { ok: false, error: "The submitted JSON is invalid." },
-        400
-      );
-    }
-
-    console.error("Divination intake submission failed:", error);
 
     return json(
       {
         ok: false,
-        error:
-          "The intake could not be saved. Confirm the DB binding and divination_intakes table."
+        error: "The intake could not be saved. Please try again."
       },
       500
     );
@@ -390,7 +360,7 @@ export async function onRequestPost(context) {
 
 export function onRequestGet() {
   return json(
-    { ok: false, error: "Use POST to submit a divination intake." },
+    { ok: false, error: "Use POST to submit an intake." },
     405,
     { Allow: "POST" }
   );
