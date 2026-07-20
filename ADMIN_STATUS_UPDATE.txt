@@ -1,0 +1,29 @@
+ADMIN STATUS LIST UPDATE
+
+The new applicant workflow uses these statuses:
+
+  submitted
+  confirmed
+
+Your current admin page may have a hard-coded status option list. Add
+"submitted" and "confirmed" to that list so the records can be viewed and
+changed without losing the displayed status.
+
+Recommended order:
+
+[
+  "submitted",
+  "confirmed",
+  "new_intake",
+  "awaiting_payment",
+  "paid_awaiting_schedule",
+  "scheduled",
+  "reading_completed",
+  "ebo_pending",
+  "follow_up_needed",
+  "closed"
+]
+
+The intake is created as "submitted". After the applicant confirms the review
+page, the status changes to "confirmed". Payment tracking can be added later
+without changing the applicant-confirmation workflow.

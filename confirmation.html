@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#060403">
+
+  <title>Review and Confirm Your Intake | Your Babalawo</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/SwamiG.gif">
+
+  <style>
+    :root {
+      --bg:#060403;
+      --panel:#120d09;
+      --gold:#d4af37;
+      --gold2:#f4df95;
+      --cream:#fff4cc;
+      --text:#f8efd4;
+      --muted:#cdbf91;
+      --line:rgba(255,255,255,.14);
+      --ok:#a7efbd;
+      --bad:#ffb1b1;
+      --max:980px;
+    }
+
+    * { box-sizing:border-box; }
+
+    body {
+      margin:0;
+      font-family:Georgia,"Times New Roman",serif;
+      color:var(--text);
+      line-height:1.6;
+      background:
+        radial-gradient(circle at 15% 5%,rgba(212,175,55,.18),transparent 30rem),
+        radial-gradient(circle at 90% 10%,rgba(111,66,193,.2),transparent 28rem),
+        var(--bg);
+    }
+
+    a { color:var(--gold2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+
+    .wrap {
+      width:min(var(--max),calc(100% - 26px));
+      margin:auto;
+    }
+
+    .top {
+      border-bottom:1px solid var(--line);
+      background:rgba(5,3,2,.92);
+    }
+
+    .nav {
+      min-height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      color:var(--cream);
+      font-weight:900;
+    }
+
+    .brand img {
+      width:52px;
+      height:52px;
+      border-radius:50%;
+      border:2px solid var(--gold);
+      object-fit:cover;
+    }
+
+    .brand small {
+      display:block;
+      color:var(--muted);
+      font-size:.72rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(212,175,55,.7);
+      border-radius:999px;
+      padding:12px 18px;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#160d04;
+      font:800 1rem Georgia,"Times New Roman",serif;
+      cursor:pointer;
+      text-align:center;
+    }
+
+    .btn.secondary {
+      background:rgba(255,255,255,.06);
+      color:var(--cream);
+      border-color:var(--line);
+    }
+
+    button:disabled {
+      opacity:.62;
+      cursor:wait;
+    }
+
+    .hero { padding:54px 0 24px; }
+
+    .eyebrow {
+      display:inline-block;
+      padding:7px 12px;
+      border:1px solid rgba(212,175,55,.38);
+      border-radius:999px;
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+      font-size:.8rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    h1 {
+      margin:16px 0 0;
+      color:var(--cream);
+      font-size:clamp(2.2rem,7vw,4.5rem);
+      line-height:1.05;
+      letter-spacing:-.045em;
+    }
+
+    h1 span {
+      display:block;
+      color:var(--gold2);
+      font-size:clamp(1.3rem,4vw,2.4rem);
+      margin-top:7px;
+    }
+
+    .lead {
+      max-width:780px;
+      color:var(--muted);
+      font-size:1.1rem;
+    }
+
+    main section { padding:25px 0 50px; }
+
+    .panel {
+      border:1px solid rgba(212,175,55,.34);
+      border-radius:28px;
+      padding:clamp(18px,4vw,36px);
+      background:rgba(14,10,8,.94);
+      box-shadow:0 24px 70px rgba(0,0,0,.55);
+    }
+
+    .reference {
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:18px;
+      align-items:center;
+      margin-bottom:22px;
+      padding:17px;
+      border:1px solid rgba(167,239,189,.38);
+      border-radius:16px;
+      background:rgba(167,239,189,.08);
+    }
+
+    .reference small {
+      display:block;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.1em;
+    }
+
+    .reference strong {
+      display:block;
+      margin-top:4px;
+      color:var(--ok);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      overflow-wrap:anywhere;
+    }
+
+    .summary-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .card {
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:20px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .card.full { grid-column:1 / -1; }
+
+    .card h2 {
+      margin:0 0 15px;
+      color:var(--gold2);
+      font-size:1.35rem;
+    }
+
+    dl {
+      display:grid;
+      gap:12px;
+      margin:0;
+    }
+
+    dt {
+      color:var(--muted);
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    dd {
+      margin:2px 0 0;
+      color:var(--cream);
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
+    }
+
+    .field { border-bottom:1px solid rgba(255,255,255,.08); padding-bottom:10px; }
+    .field:last-child { border-bottom:0; padding-bottom:0; }
+
+    .confirm-box {
+      margin-top:22px;
+      padding:18px;
+      border:1px solid rgba(212,175,55,.4);
+      border-radius:18px;
+      background:rgba(212,175,55,.08);
+    }
+
+    .check {
+      display:flex;
+      gap:11px;
+      align-items:flex-start;
+      color:var(--muted);
+    }
+
+    .check input {
+      width:auto;
+      margin-top:6px;
+      accent-color:var(--gold);
+    }
+
+    .actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:11px;
+      margin-top:18px;
+    }
+
+    .status {
+      display:none;
+      margin-top:18px;
+      padding:16px;
+      border:1px solid rgba(212,175,55,.4);
+      border-radius:16px;
+      background:rgba(212,175,55,.09);
+    }
+
+    .status.show { display:block; }
+    .status.success { color:var(--ok); border-color:rgba(167,239,189,.45); }
+    .status.error { color:var(--bad); border-color:rgba(255,177,177,.45); }
+
+    .loading {
+      padding:30px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    footer {
+      border-top:1px solid var(--line);
+      padding:28px 0;
+      color:var(--muted);
+      font-size:.9rem;
+    }
+
+    .foot {
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    @media (max-width:720px) {
+      .summary-grid { grid-template-columns:1fr; }
+      .card.full { grid-column:auto; }
+      .reference { grid-template-columns:1fr; }
+      .actions { flex-direction:column; }
+      .actions .btn { width:100%; }
+    }
+
+    @media print {
+      .top,
+      .actions,
+      .confirm-box,
+      footer {
+        display:none!important;
+      }
+
+      body {
+        background:#fff;
+        color:#000;
+      }
+
+      .panel,
+      .card,
+      .reference {
+        box-shadow:none;
+        background:#fff;
+        color:#000;
+        border-color:#888;
+      }
+
+      h1,
+      h1 span,
+      .card h2,
+      dd,
+      .reference strong {
+        color:#000;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<header class="top">
+  <div class="wrap nav">
+    <a class="brand" href="/">
+      <img src="/SwamiG.gif" alt="Your Babalawo and SwamiG Institute emblem">
+      <span>Your Babalawo<small>SwamiG Institute</small></span>
+    </a>
+
+    <a class="btn secondary" href="tel:+18507926442">Call 850-SWAMIG2</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Applicant Review</div>
+      <h1>
+        Review Your Intake
+        <span>Confirm the information before payment</span>
+      </h1>
+      <p class="lead">
+        Carefully review every section. Use “Make Corrections” before confirming
+        if anything is incomplete or inaccurate.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap panel">
+      <div id="loading" class="loading">Loading your intake information…</div>
+
+      <div id="content" hidden>
+        <div class="reference">
+          <div>
+            <small>Intake Confirmation Number</small>
+            <strong id="publicReference"></strong>
+          </div>
+          <div id="statusText"></div>
+        </div>
+
+        <div class="summary-grid">
+          <article class="card">
+            <h2>Client Information</h2>
+            <dl>
+              <div class="field"><dt>Full Name</dt><dd id="fullName"></dd></div>
+              <div class="field"><dt>Email</dt><dd id="email"></dd></div>
+              <div class="field"><dt>Phone / Text</dt><dd id="phone"></dd></div>
+              <div class="field"><dt>Location</dt><dd id="location"></dd></div>
+              <div class="field"><dt>Preferred Contact</dt><dd id="contactMethod"></dd></div>
+            </dl>
+          </article>
+
+          <article class="card">
+            <h2>Spiritual Background</h2>
+            <dl>
+              <div class="field"><dt>Received Ifá Before</dt><dd id="ifaBefore"></dd></div>
+              <div class="field"><dt>Received Tehuti Before</dt><dd id="tehutiBefore"></dd></div>
+              <div class="field"><dt>Initiation Status</dt><dd id="initiationStatus"></dd></div>
+              <div class="field"><dt>Godparent / Elder / House</dt><dd id="house"></dd></div>
+            </dl>
+          </article>
+
+          <article class="card full">
+            <h2>Main Concern</h2>
+            <dl>
+              <div class="field"><dt>Concern Category</dt><dd id="concernType"></dd></div>
+              <div class="field"><dt>Primary Reason</dt><dd id="mainConcern"></dd></div>
+              <div class="field"><dt>Why Now</dt><dd id="timing"></dd></div>
+            </dl>
+          </article>
+
+          <article class="card full">
+            <h2>Questions for the Oracle</h2>
+            <dl>
+              <div class="field"><dt>Question 1</dt><dd id="question1"></dd></div>
+              <div class="field"><dt>Question 2</dt><dd id="question2"></dd></div>
+              <div class="field"><dt>Question 3</dt><dd id="question3"></dd></div>
+            </dl>
+          </article>
+
+          <article class="card full">
+            <h2>Agreements</h2>
+            <dl>
+              <div class="field"><dt>Spiritual Consultation</dt><dd id="consentSpiritual"></dd></div>
+              <div class="field"><dt>Professional-care Disclaimer</dt><dd id="consentDisclaimer"></dd></div>
+              <div class="field"><dt>Ebo or Corrective Action</dt><dd id="consentEbo"></dd></div>
+              <div class="field"><dt>Payment Requirement</dt><dd id="consentPayment"></dd></div>
+            </dl>
+          </article>
+        </div>
+
+        <div class="confirm-box">
+          <label class="check">
+            <input id="accuracyConfirmation" type="checkbox">
+            <span>
+              <strong>I have reviewed the information above and confirm that it is accurate.</strong>
+              I understand that confirmation locks this intake against further
+              applicant edits and continues to payment.
+            </span>
+          </label>
+
+          <div class="actions">
+            <button id="confirmButton" class="btn" type="button">
+              Confirm My Intake
+            </button>
+            <a id="editButton" class="btn secondary" href="#">
+              Make Corrections
+            </a>
+            <button id="printButton" class="btn secondary" type="button">
+              Print / Save Confirmation
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="message" class="status" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <strong>YourBabalawo.com</strong><br>
+        Koleoso: The Ifá Oracle of Tehuti
+      </div>
+
+      <div>
+        SwamiG Institute<br>
+        <a href="mailto:baba@swamiginstitute.com">baba@swamiginstitute.com</a>
+        |
+        <a href="tel:+18507926442">850-SWAMIG2</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+
+  const params = new URLSearchParams(window.location.search);
+  const token = (params.get("token") || "").trim();
+
+  const loading = document.getElementById("loading");
+  const content = document.getElementById("content");
+  const message = document.getElementById("message");
+  const confirmButton = document.getElementById("confirmButton");
+  const editButton = document.getElementById("editButton");
+  const printButton = document.getElementById("printButton");
+  const accuracyConfirmation =
+    document.getElementById("accuracyConfirmation");
+
+  function setText(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value || "Not provided";
+  }
+
+  function yesNo(value) {
+    return value ? "Accepted" : "Not accepted";
+  }
+
+  function showMessage(text, type = "") {
+    message.className = "status show" + (type ? " " + type : "");
+    message.textContent = text;
+  }
+
+  function render(intake) {
+    setText("publicReference", intake.publicReference);
+    setText("statusText", intake.status === "submitted"
+      ? "Submitted — awaiting your confirmation"
+      : intake.status);
+
+    setText("fullName", intake.fullName);
+    setText("email", intake.email);
+    setText("phone", intake.phone);
+    setText("location", intake.location);
+    setText("contactMethod", intake.contactMethod);
+
+    setText("ifaBefore", intake.ifaBefore);
+    setText("tehutiBefore", intake.tehutiBefore);
+    setText("initiationStatus", intake.initiationStatus);
+    setText("house", intake.house);
+
+    setText("concernType", intake.concernType);
+    setText("mainConcern", intake.mainConcern);
+    setText("timing", intake.timing);
+
+    setText("question1", intake.question1);
+    setText("question2", intake.question2);
+    setText("question3", intake.question3);
+
+    setText("consentSpiritual", yesNo(intake.consentSpiritualConsultation));
+    setText("consentDisclaimer", yesNo(intake.consentNotMedicalLegalFinancial));
+    setText("consentEbo", yesNo(intake.consentEboCorrection));
+    setText("consentPayment", yesNo(intake.consentPaymentRequired));
+
+    editButton.href =
+      "/intake.html?edit=" + encodeURIComponent(token);
+
+    loading.hidden = true;
+    content.hidden = false;
+  }
+
+  async function loadIntake() {
+    if (!token) {
+      throw new Error(
+        "The confirmation link is incomplete. Return to the intake form and submit again."
+      );
+    }
+
+    const response = await fetch(
+      "/api/intake/confirmation?token=" + encodeURIComponent(token),
+      {
+        headers: { Accept: "application/json" },
+        cache: "no-store"
+      }
+    );
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok || !result.ok) {
+      throw new Error(
+        result.error ||
+        "This confirmation link is invalid, expired, or has already been used."
+      );
+    }
+
+    render(result.intake);
+  }
+
+  confirmButton.addEventListener("click", async () => {
+    if (!accuracyConfirmation.checked) {
+      showMessage(
+        "Check the accuracy confirmation box before confirming your intake.",
+        "error"
+      );
+      return;
+    }
+
+    confirmButton.disabled = true;
+    confirmButton.textContent = "Confirming…";
+    showMessage("Confirming your intake…");
+
+    try {
+      const response = await fetch("/api/intake/confirm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          token,
+          accuracyConfirmed: true
+        })
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || "The intake could not be confirmed.");
+      }
+
+      try {
+        localStorage.setItem(
+          "koleoso_last_intake_id",
+          result.publicReference
+        );
+      } catch (_) {}
+
+      showMessage(
+        "Intake confirmed. Continuing to payment…",
+        "success"
+      );
+
+      window.setTimeout(() => {
+        window.location.href = result.paymentUrl;
+      }, 700);
+    } catch (error) {
+      confirmButton.disabled = false;
+      confirmButton.textContent = "Confirm My Intake";
+      showMessage(error.message || "A network error occurred.", "error");
+    }
+  });
+
+  printButton.addEventListener("click", () => window.print());
+
+  loadIntake().catch((error) => {
+    loading.hidden = true;
+    showMessage(error.message, "error");
+  });
+})();
+</script>
+</body>
+</html>
