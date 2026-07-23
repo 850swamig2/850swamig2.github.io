@@ -86,6 +86,175 @@ function validatePayload(payload) {
   return errors;
 }
 
+function mailgunConfiguration(env) {
+  const domain = text(env.MAILGUN_DOMAIN, 255);
+  const apiKey = text(env.MAILGUN_API_KEY, 1000);
+
+  if (!domain || !apiKey) {
+    throw new Error(
+      "MAILGUN_DOMAIN and MAILGUN_API_KEY must be configured."
+    );
+  }
+
+  const apiBase = text(
+    env.MAILGUN_API_BASE_URL || "https://api.mailgun.net",
+    500
+  ).replace(/\/+$/, "");
+
+  const recipient = text(
+    env.INTAKE_NOTIFICATION_EMAIL || "850SwamiG2@gmail.com",
+    254
+  );
+
+  const from = text(
+    env.MAILGUN_FROM ||
+      `Your Babalawo <postmaster@${domain}>`,
+    320
+  );
+
+  const adminUrl = text(
+    env.INTAKE_ADMIN_URL ||
+      "https://yourbabalawo.com/admin.html",
+    1000
+  );
+
+  return {
+    domain,
+    apiKey,
+    apiBase,
+    recipient,
+    from,
+    adminUrl
+  };
+}
+
+async function sendIntakeNotification(env, notification) {
+  const config = mailgunConfiguration(env);
+
+  const subject =
+    `New Your Babalawo Intake — ${notification.publicReference}`;
+
+  const message = [
+    "A new divination intake has been submitted.",
+    "",
+    `Applicant: ${notification.fullName}`,
+    `Applicant email: ${notification.email}`,
+    `Intake number: ${notification.publicReference}`,
+    `Concern category: ${notification.concernType}`,
+    `Preferred contact: ${notification.contactMethod}`,
+    "Status: Submitted — awaiting applicant confirmation",
+    `Submitted (UTC): ${notification.createdAt}`,
+    "",
+    `Protected review page: ${config.adminUrl}`,
+    "",
+    "Privacy notice: The applicant's full concern, spiritual background,",
+    "and questions are not included in this email. Review those details",
+    "only through the protected administration page."
+  ].join("\n");
+
+  const form = new FormData();
+  form.set("from", config.from);
+  form.set("to", config.recipient);
+  form.set("subject", subject);
+  form.set("text", message);
+  form.set("h:Reply-To", notification.email);
+
+  const authorization = btoa(`api:${config.apiKey}`);
+
+  const response = await fetch(
+    `${config.apiBase}/v3/${encodeURIComponent(config.domain)}/messages`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${authorization}`
+      },
+      body: form
+    }
+  );
+
+  const responseText = await response.text();
+
+  if (!response.ok) {
+    throw new Error(
+      `Mailgun notification failed with status ${response.status}: ` +
+      responseText.slice(0, 500)
+    );
+  }
+
+  return {
+    recipient: config.recipient,
+    providerResponse: responseText.slice(0, 500)
+  };
+}
+
+async function recordNotificationEvent(
+  env,
+  intakeId,
+  createdAt,
+  eventType,
+  summary,
+  metadata
+) {
+  if (!env.DB) return;
+
+  await env.DB.prepare(`
+    INSERT INTO interaction_log (
+      id,
+      intake_id,
+      created_at,
+      event_type,
+      summary,
+      metadata_json
+    ) VALUES (?, ?, ?, ?, ?, ?)
+  `).bind(
+    crypto.randomUUID(),
+    intakeId,
+    createdAt,
+    eventType,
+    summary,
+    JSON.stringify(metadata)
+  ).run();
+}
+
+async function notifyNewIntake(env, notification) {
+  try {
+    const result = await sendIntakeNotification(env, notification);
+
+    await recordNotificationEvent(
+      env,
+      notification.internalId,
+      new Date().toISOString(),
+      "intake_notification_sent",
+      `New-intake email sent for ${notification.publicReference}.`,
+      {
+        publicReference: notification.publicReference,
+        recipient: result.recipient
+      }
+    );
+  } catch (error) {
+    console.error("New-intake notification failed:", error);
+
+    try {
+      await recordNotificationEvent(
+        env,
+        notification.internalId,
+        new Date().toISOString(),
+        "intake_notification_failed",
+        `New-intake email failed for ${notification.publicReference}.`,
+        {
+          publicReference: notification.publicReference,
+          error: String(error?.message || error).slice(0, 1000)
+        }
+      );
+    } catch (loggingError) {
+      console.error(
+        "Could not record notification failure:",
+        loggingError
+      );
+    }
+  }
+}
+
 async function verifyTurnstile(request, env, token) {
   if (!env.TURNSTILE_SECRET_KEY) {
     return {
@@ -314,6 +483,18 @@ export async function onRequestPost(context) {
     );
 
     await env.DB.batch([intakeStatement, eventStatement]);
+
+    context.waitUntil(
+      notifyNewIntake(env, {
+        internalId,
+        publicReference,
+        fullName: payload.fullName,
+        email: payload.email,
+        concernType: payload.concernType,
+        contactMethod: payload.contactMethod,
+        createdAt
+      })
+    );
 
     const next =
       "/confirmation.html?token=" +
