@@ -711,6 +711,7 @@
         <a href="intake.html">Intake</a>
         <a href="payment.html" aria-current="page">Payment</a>
         <a href="prepare.html">Prepare</a>
+        <a href="schedule.html">Schedule</a>
       </nav>
 
       <a class="btn secondary" href="intake.html">Begin Intake</a>
@@ -1080,12 +1081,10 @@
           <section class="card side-card">
             <h3>After Payment</h3>
             <p>
-              Payment purchases the selected consultation but does not automatically
-              reserve an appointment time. Scheduling is confirmed separately after
-              the intake and payment are matched.
+              After submitting payment, continue to preparation and scheduling. Your appointment remains subject to matching the booking with your confirmed intake and payment.
             </p>
             <div class="actions">
-              <a class="btn" href="prepare.html">Continue to Preparation</a>
+              <a id="continueAfterPayment" class="btn" href="prepare.html">I Have Submitted Payment — Continue</a>
               <a
                 class="btn secondary"
                 href="mailto:baba@swamiginstitute.com?subject=Divination%20Payment%20Completed"
@@ -1191,6 +1190,8 @@
       const extendedPayPalArea = document.getElementById("extendedPayPalArea");
       const referenceBox = document.getElementById("intakeReference");
       const referenceValue = document.getElementById("referenceValue");
+      const continueAfterPayment =
+        document.getElementById("continueAfterPayment");
 
       year.textContent = new Date().getFullYear();
 
@@ -1211,11 +1212,26 @@
         referenceBox.classList.add("show");
       }
 
+      function nextPageUrl(page, serviceKey) {
+        const next = new URL(page, window.location.href);
+
+        if (intakeId) {
+          next.searchParams.set("intake", intakeId);
+        }
+
+        if (serviceKey) {
+          next.searchParams.set("service", serviceKey);
+        }
+
+        return next.pathname + next.search;
+      }
+
       function chooseService(key, shouldScroll = true) {
         const service = services[key] || services.premium;
         selectedName.textContent = service.name;
         selectedPrice.textContent = `$${service.price}`;
         selectedDescription.textContent = service.description;
+        continueAfterPayment.href = nextPageUrl("prepare.html", key);
 
         const isFollowup = key === "followup";
         const isFocused = key === "focused";
